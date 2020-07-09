@@ -11,20 +11,18 @@ Game.prototype = {
         }
 
         this.currentScore = _score;
-        this.total_enemies = 0;
+        this.totalEnemiesNumb = 0;
         this.elapsedTime = 0;
         this.seconds = 1000;
         this.physics.startSystem(Phaser.Physics.ARCADE);
         this.physics.arcade.gravity.y = 1000;
 
-        this.currentBulletDirection = 1;
         this.currentPlayerDirection = 1;
 
-        this.currentWave = currentWave || 4;
+        this.currentWave = currentWave || 1;
         this.maxNumbEnemies = maxNumbEnemies * 2 || 4;
-        this.enemy_count = 0;
+        this.currentEnemyNumb = 0;
 
-        this.typeBullet = null
         this.currenTimeShoot = 0
         this.timeToShoot = 1000
 
@@ -80,16 +78,6 @@ Game.prototype = {
         this.keys = this.input.keyboard.createCursorKeys();
 
         this.spacekey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-
-        /*
-        this.keyCodeA = this.game.input.keyboard.addKey(Phaser.Keyboard.A);
-        this.keyCodeS = this.game.input.keyboard.addKey(Phaser.Keyboard.S);
-        this.keyCodeD = this.game.input.keyboard.addKey(Phaser.Keyboard.D);
-        this.keyCodeF = this.game.input.keyboard.addKey(Phaser.Keyboard.F);
-        this.keyCodeG = this.game.input.keyboard.addKey(Phaser.Keyboard.G);
-        */
-
-        //this.q_key = this.game.input.keyboard.addKey(Phaser.Keyboard.Q);
     },
 
     CreateFloor: function () {
@@ -133,12 +121,10 @@ Game.prototype = {
     update: function () {
 
         this.MovePlayer();
-        //this.Shoot();
 
         this.currenTimeShoot += this.game.time.elapsed;
         if (this.currenTimeShoot >= this.timeToShoot) {
             this.Shoot();
-            //this.generateSun();
         }
 
         this.LoadWave(this.waveFrequencySeconds);
@@ -167,14 +153,14 @@ Game.prototype = {
 
     CheckDestroyEnemy: function (bullet, enemy) {
 
-        if (bullet.bulletType == enemy.type_enemy) {
-            if (enemy.type_enemy == "brown") {
+        if (bullet.bulletType == enemy.enemyType) {
+            if (enemy.enemyType == "brown") {
                 this.currentScore = this.currentScore + 5;
-            } else if (enemy.type_enemy == "red") {
+            } else if (enemy.enemyType == "red") {
                 this.currentScore = this.currentScore + 10;
-            } else if (enemy.type_enemy == "yellow") {
+            } else if (enemy.enemyType == "yellow") {
                 this.currentScore = this.currentScore + 15;
-            } else if (enemy.type_enemy == "cream") {
+            } else if (enemy.enemyType == "cream") {
                 this.currentScore = this.currentScore + 20;
             } else {
                 this.currentScore = this.currentScore + 50;
@@ -205,39 +191,6 @@ Game.prototype = {
     },
 
     Shoot: function () {
-        /*
-        this.typeBullet = "";
-        if(this.keyCodeA.isDown){
-            this.typeBullet = "brown";
-            //this.keyCodeA.onDown.add(this.CreatePlayerBullets,this,{param1: 10});
-
-            //console.log("Oprime A")
-        }
-
-        if(this.keyCodeS.isDown){
-            this.typeBullet = "cream";
-            //this.keyCodeS.onDown.add(this.CreatePlayerBullets,this);
-
-        }
-
-         if(this.keyCodeD.isDown){
-            this.typeBullet = "fly";
-            //this.keyCodeD.onDown.add(this.CreatePlayerBullets,this);
-
-        }
-
-         if(this.keyCodeF.isDown){
-            this.typeBullet = "red";
-            //this.keyCodeF.onDown.add(this.CreatePlayerBullets,this);
-
-        }
-
-         if(this.keyCodeG.isDown){
-            this.typeBullet = "yellow";
-           // this.keyCodeG.onDown.add(this.CreatePlayerBullets,this);
-
-        }
-        */
 
         if (this.game.input.keyboard.isDown(Phaser.Keyboard.A)) {
             this.currenTimeShoot = 0;
@@ -264,46 +217,14 @@ Game.prototype = {
             this.CreatePlayerBullets("yellow");
         }
 
-        //this.keyCodeA.onDown.add(this.CreateA,this);
-
-        /*
-        this.keyCodeA.onDown.add(this.CreatePlayerBullets,this);
-        this.keyCodeS.onDown.add(this.CreatePlayerBullets,this);
-        this.keyCodeD.onDown.add(this.CreatePlayerBullets,this);
-        this.keyCodeF.onDown.add(this.CreatePlayerBullets,this);
-        this.keyCodeG.onDown.add(this.CreatePlayerBullets,this);
-*/
-
-
-        //this.q_key.onDown.add(this.ChangeDirection,this);
     },
 
-    CreateA: function () {
-        this.typeBullet = "brown";
-        console.log(this.typeBullet);
-        let bullet = this.playerBullets.getFirstDead();
-
-        if (!bullet) {
-            bullet = new PlayerBullet(this.game, this.player.x, this.player.y, this.typeBullet);
-        } else {
-            bullet.reset(this.player.x, this.player.y, this.typeBullet);
-        }
-        this.playerBullets.add(bullet);
-
-        bullet.body.allowGravity = false;
-
-
-        bullet.body.velocity.x = this.BULLET_SPEED * this.currentPlayerDirection;
-    },
 
     CreatePlayerBullets: function (_typeBullet) {
         console.log(_typeBullet);
-        //console.log(this.typeBullet)
-        //console.log(this.param1)
         let bullet = this.playerBullets.getFirstDead();
 
         if (!bullet) {
-            //console.log(_typeBullet)
             bullet = new PlayerBullet(this.game, this.player.x, this.player.y, _typeBullet);
         } else {
             bullet.reset(this.player.x, this.player.y, _typeBullet);
@@ -314,22 +235,6 @@ Game.prototype = {
 
 
         bullet.body.velocity.x = this.BULLET_SPEED * this.currentPlayerDirection;
-
-        /*
-        if (this.currentBulletDirection == 1) {
-            bullet.body.velocity.y = -this.BULLET_SPEED;
-        }else if (this.currentBulletDirection == -1){
-            if (this.currentPlayerDirection == 1) {
-                bullet.body.velocity.x = this.BULLET_SPEED;
-            }else{
-                bullet.body.velocity.x = -this.BULLET_SPEED;
-            }
-        }
-        */
-    },
-
-    ChangeDirection: function () {
-        this.currentBulletDirection *= -1;
     },
 
     Jump: function () {
@@ -352,10 +257,10 @@ Game.prototype = {
         this.elapsedTime += this.time.elapsed;
 
         if (this.elapsedTime >= this.seconds * freq) {
-            if (this.enemy_count < this.maxNumbEnemies) {
+            if (this.currentEnemyNumb < this.maxNumbEnemies) {
                 this.elapsedTime = 0;
                 this.CreateEnemy(0, 0, this.currentWave);
-                this.enemy_count++;
+                this.currentEnemyNumb++;
             }
         }
     },

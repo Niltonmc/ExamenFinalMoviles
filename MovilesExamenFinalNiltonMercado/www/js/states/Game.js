@@ -153,14 +153,14 @@ Game.prototype = {
 
     CheckDestroyEnemy: function (bullet, enemy) {
 
-        if (bullet.bulletType == enemy.type_enemy) {
-            if (enemy.type_enemy == "brown") {
+        if (bullet.bulletType == enemy.enemyType) {
+            if (enemy.enemyType == "brown") {
                 this.currentScore = this.currentScore + 5;
-            } else if (enemy.type_enemy == "red") {
+            } else if (enemy.enemyType == "red") {
                 this.currentScore = this.currentScore + 10;
-            } else if (enemy.type_enemy == "yellow") {
+            } else if (enemy.enemyType == "yellow") {
                 this.currentScore = this.currentScore + 15;
-            } else if (enemy.type_enemy == "cream") {
+            } else if (enemy.enemyType == "cream") {
                 this.currentScore = this.currentScore + 20;
             } else {
                 this.currentScore = this.currentScore + 50;
